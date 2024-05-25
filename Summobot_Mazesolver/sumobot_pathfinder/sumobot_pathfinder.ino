@@ -71,22 +71,33 @@ void pathFinder(int cm1, int cm2, int cm3) {
   }
 }
 
-void summoBot(int cm1) {
+void summoBot(int cm1, int irSensor1, int irSensor2) {
+  pinMode(irSensor1, INPUT);
+  pinMode(irSensor2, INPUT);
   int opponent = 80;
-
-  irRead(irSensor1, irSensor2);
-
-  if (cm1 <= opponent) {
+  
+    if ((digitalRead(irSensor1) || digitalRead(irSensor2))== LOW) {
+    //IF ONE IS WHITE MUST GO FORWARD
     forward(in1, in2, in3, in4);
-  } else {
-    
+  } else if(digitalRead(irSensor1) == LOW){
+    //left sensor
+    right(in1, in2, in3, in4);
+    delay(300);
+    forward(in1, in2, in3, in4);
+  } else if(digitalRead(irSensor2) == LOW){
+    //right sensor
+    left(in1, in2, in3, in4);
+    delay(300);
+    forward(in1, in2, in3, in4);
+  }else if (cm1 > opponent) {
     right(in1, in2, in3, in4);
     delay(400);
-    stop(in1, in2, in3, in4);
+    stop(in1, in2, in3, in4); 
     delay(100);
+  }else if (cm1 <= opponent) {
+    forward(in1, in2, in3, in4);
   }
 }
-
 //WHEELS
 void forward(int in1, int in2, int in3, int in4) {
 
