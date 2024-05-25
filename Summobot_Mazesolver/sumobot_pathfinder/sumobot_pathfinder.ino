@@ -33,7 +33,6 @@ decode_results results;
 int currentMode = 0;
 
 
-
 void pathFinder(int cm1, int cm2, int cm3) {
   int stop_dis = 20;  // stopping distance
   // cm2=right, cm3 = left
@@ -98,6 +97,7 @@ void summoBot(int cm1, int irSensor1, int irSensor2) {
     forward(in1, in2, in3, in4);
   }
 }
+
 //WHEELS
 void forward(int in1, int in2, int in3, int in4) {
 
@@ -198,28 +198,6 @@ long ultrasonicRead3(int trig, int echo) {
 }
 
 
-
-void irRead(int irSensor1, int irSensor2) {
-  pinMode(irSensor1, INPUT);
-  pinMode(irSensor2, INPUT);
-  pinMode(13, OUTPUT);
-
-  if ((digitalRead(irSensor1) || digitalRead(irSensor2))== HIGH) {
-    //IF ONE IS WHITE MUST GO FORWARD
-    forward(in1, in2, in3, in4);
-  } else if(digitalRead(irSensor1) == HIGH){
-    //left sensor
-    right(in1, in2, in3, in4);
-  } else if(digitalRead(irSensor2) == HIGH){
-    //right sensor
-    left(in1, in2, in3, in4);
-  } else if((digitalRead(irSensor1) && digitalRead(irSensor2)) == LOW) {
-    //IF BOTH BLACK PADAYUN SA COMMAND
-    //turn on if low
-    digitalWrite(13, LOW);
-  }
-}
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -257,10 +235,11 @@ void loop() {
     } 
 
     if(currentMode == 0){
+      // irRead(irSensor1, irSensor2);
       pathFinder(cm1, cm2, cm3);
     }else if(currentMode == 1){
       delay(dElay);
-      summoBot(cm1);
+      summoBot(cm1, irSensor1, irSensor2);
       // Serial.println("summo");
       // Serial.println(dElay);
     }else if(currentMode == 2){
@@ -274,14 +253,14 @@ void loop() {
     // Serial.println(cm3);
     // delay(1000);
 
-      // // for testing - multimeter
-      // // Read the input on analog pin 00
-      // int sensorValue = analogRead(A3);
-      // // Convert the analog reading to voltage
-      // float voltage = sensorValue * (5.0 / 1023.0);
-      // // Print the voltage to the Serial Monitor
-      // Serial.println(voltage);
-      // delay(1000);
+      // for testing - multimeter
+      // Read the input on analog pin 00
+      int sensorValue = analogRead(A3);
+      // Convert the analog reading to voltage
+      float voltage = sensorValue * (5.0 / 1023.0);
+      // Print the voltage to the Serial Monitor
+      Serial.println(voltage);
+      delay(1000);
     //  irRead(irSensor1,irSensor2);
     // //  right(in1, in2, in3, in4);
   }
